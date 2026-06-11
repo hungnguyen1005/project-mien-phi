@@ -3,14 +3,11 @@ import { useEffect, useState, useCallback } from "react";
 export default function DialogueBox({ lines = [], onComplete, visible }) {
   const [lineIndex, setLineIndex] = useState(0);
 
-  useEffect(() => {
-    if (visible) setLineIndex(0);
-  }, [visible, lines]);
-
   const advance = useCallback(() => {
     if (lineIndex < lines.length - 1) {
       setLineIndex((i) => i + 1);
     } else {
+      setLineIndex(0);
       onComplete?.();
     }
   }, [lineIndex, lines.length, onComplete]);

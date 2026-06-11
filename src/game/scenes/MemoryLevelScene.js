@@ -28,7 +28,8 @@ export default class MemoryLevelScene extends Phaser.Scene {
   }
 
   create() {
-    const { width, height } = GAME_CONFIG;
+    const { height } = GAME_CONFIG;
+    this.registry.get("onSceneMusicChange")?.(this.level.music);
 
     drawBackground(this, this.level);
     this.ground = createGround(this);

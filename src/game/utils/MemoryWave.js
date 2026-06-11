@@ -1,4 +1,3 @@
-import Phaser from "phaser";
 import { GAME_CONFIG } from "../../data/gameConfig";
 import { memoryWaveIcons } from "../../data/memories";
 

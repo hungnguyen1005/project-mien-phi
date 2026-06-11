@@ -356,12 +356,79 @@
   color: #ffe4b5;
 }
 
-/* Audio toggle */
-.audio-toggle {
+/* Audio controls */
+.audio-panel {
   position: fixed;
   top: 1rem;
   right: 1rem;
   z-index: 50;
-  padding: 0.4rem 0.8rem;
+  width: min(320px, calc(100vw - 2rem));
+  padding: 0.75rem;
+  background: rgba(20, 12, 28, 0.9);
+  border: 3px solid #d4a574;
+  box-shadow: 0 0 18px rgba(255, 183, 197, 0.24);
+  color: #fff5e6;
+  font-family: "VT323", monospace;
+}
+
+.audio-track {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.audio-label {
+  color: #d4a574;
+  font-size: 0.9rem;
+}
+
+.audio-track strong {
+  color: #ffe4b5;
   font-size: 1.2rem;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audio-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 0.6rem;
+}
+
+.audio-toggle {
+  flex: 0 0 auto;
+  padding: 0.35rem 0.7rem;
+  font-size: 1rem;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  flex: 1;
+  color: #ffb7c5;
+  font-size: 1rem;
+}
+
+.volume-control input {
+  width: 100%;
+  accent-color: #ffb7c5;
+}
+
+@media (max-width: 640px) {
+  .audio-panel {
+    top: 0.5rem;
+    right: 0.5rem;
+    width: min(280px, calc(100vw - 1rem));
+    padding: 0.55rem;
+  }
+
+  .audio-track strong {
+    font-size: 1rem;
+  }
 }

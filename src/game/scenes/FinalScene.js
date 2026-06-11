@@ -12,6 +12,7 @@ export default class FinalScene extends Phaser.Scene {
 
   create() {
     const { width, height } = GAME_CONFIG;
+    this.registry.get("onSceneMusicChange")?.(finalPathConfig.music);
 
     drawBackground(this, finalPathConfig);
     this.ground = createGround(this);

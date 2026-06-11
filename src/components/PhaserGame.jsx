@@ -13,6 +13,7 @@ export default function PhaserGame({
   onGameComplete,
   onSparkle,
   saveProgress,
+  onSceneMusicChange,
 }) {
   const gameContainerRef = useRef(null);
   const gameInstanceRef = useRef(null);
@@ -48,6 +49,7 @@ export default function PhaserGame({
     game.registry.set("onGameComplete", onGameComplete);
     game.registry.set("onSparkle", onSparkle);
     game.registry.set("saveProgress", saveProgress);
+    game.registry.set("onSceneMusicChange", onSceneMusicChange);
     game.registry.set("startLevel", startLevel);
     game.registry.set("progress", progress);
 
@@ -64,7 +66,8 @@ export default function PhaserGame({
     game.registry.set("onGameComplete", onGameComplete);
     game.registry.set("onSparkle", onSparkle);
     game.registry.set("saveProgress", saveProgress);
-  }, [onDialogue, onGameComplete, onSparkle, saveProgress]);
+    game.registry.set("onSceneMusicChange", onSceneMusicChange);
+  }, [onDialogue, onGameComplete, onSparkle, saveProgress, onSceneMusicChange]);
 
   return (
     <div className="game-wrapper">

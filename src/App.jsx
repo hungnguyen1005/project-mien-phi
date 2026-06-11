@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import LandingPage from "./components/LandingPage";
 import MemoryLogin from "./components/MemoryLogin";
 import IntroStory from "./components/IntroStory";
@@ -7,7 +7,6 @@ import DialogueBox from "./components/DialogueBox";
 import LetterModal from "./components/LetterModal";
 import AudioToggle from "./components/AudioToggle";
 import { useGameProgress } from "./hooks/useGameProgress";
-import { AUDIO } from "./data/gameConfig";
 import "./App.css";
 
 const SCREENS = {
@@ -21,15 +20,30 @@ const SCREENS = {
 export default function App() {
   const [screen, setScreen] = useState(SCREENS.LANDING);
   const [audioEnabled, setAudioEnabled] = useState(false);
+  const [volume, setVolume] = useState(0.75);
+  const [currentMusic, setCurrentMusic] = useState(null);
   const [dialogue, setDialogue] = useState({ visible: false, lines: [] });
   const [gameKey, setGameKey] = useState(0);
   const bgmRef = useRef(null);
   const dialogueDoneRef = useRef(null);
   const { progress, saveProgress, resetProgress } = useGameProgress();
 
+  useEffect(() => {
+    const audio = bgmRef.current;
+    if (!audio) return;
+
+    audio.volume = volume;
+    audio.muted = !audioEnabled;
+
+    if (audioEnabled && currentMusic?.src) {
+      audio.play().catch(() => {});
+    } else {
+      audio.pause();
+    }
+  }, [audioEnabled, currentMusic, volume]);
+
   const handleBegin = () => {
     setAudioEnabled(true);
-    bgmRef.current?.play().catch(() => {});
     setScreen(SCREENS.LOGIN);
   };
 
@@ -57,6 +71,7 @@ export default function App() {
     setGameKey((k) => k + 1);
     setScreen(SCREENS.LANDING);
     setAudioEnabled(false);
+    setCurrentMusic(null);
     bgmRef.current?.pause();
     if (bgmRef.current) bgmRef.current.currentTime = 0;
   };
@@ -65,13 +80,16 @@ export default function App() {
 
   return (
     <main className="app">
-      <audio ref={bgmRef} src={AUDIO.bgm} loop preload="auto" />
+      <audio ref={bgmRef} src={currentMusic?.src || ""} loop preload="auto" />
 
-      {screen !== SCREENS.LANDING && (
+      {screen !== SCREENS.LANDING && currentMusic && (
         <AudioToggle
           enabled={audioEnabled}
           onToggle={setAudioEnabled}
           audioRef={bgmRef}
+          trackTitle={currentMusic.title}
+          volume={volume}
+          onVolumeChange={setVolume}
         />
       )}
 
@@ -90,6 +108,7 @@ export default function App() {
           onGameComplete={handleGameComplete}
           onSparkle={handleSparkle}
           saveProgress={saveProgress}
+          onSceneMusicChange={setCurrentMusic}
         />
       )}
 
@@ -99,11 +118,13 @@ export default function App() {
         onComplete={handleDialogueComplete}
       />
 
-      <LetterModal
-        open={screen === SCREENS.LETTER}
-        onReplay={handleReplay}
-        onClose={() => setScreen(SCREENS.LETTER)}
-      />
+      {screen === SCREENS.LETTER && (
+        <LetterModal
+          open
+          onReplay={handleReplay}
+          onClose={() => setScreen(SCREENS.LETTER)}
+        />
+      )}
     </main>
   );
 }

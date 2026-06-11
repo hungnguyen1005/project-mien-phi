@@ -21,7 +21,7 @@ export default function MemoryLogin({ onComplete }) {
       setFeedback("Đúng rồi! 💛✨");
       setSparkle(true);
     } else {
-      const tease = WRONG_ANSWER_TEASES[Math.floor(Math.random() * WRONG_ANSWER_TEASES.length)];
+      const tease = WRONG_ANSWER_TEASES[index % WRONG_ANSWER_TEASES.length];
       setFeedback(tease);
       setSparkle(false);
     }

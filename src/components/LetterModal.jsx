@@ -7,11 +7,7 @@ export default function LetterModal({ open, onReplay, onClose }) {
   const [audioPlaying, setAudioPlaying] = useState(false);
 
   useEffect(() => {
-    if (!open) {
-      setVisibleParagraphs(0);
-      setAudioPlaying(false);
-      return;
-    }
+    if (!open) return;
 
     let i = 0;
     const timer = setInterval(() => {
