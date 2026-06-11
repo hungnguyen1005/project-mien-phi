@@ -1,0 +1,367 @@
+@import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+
+.app {
+  width: 100vw;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1a1428 0%, #2d1f3d 50%, #4a2040 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Pixel UI */
+.pixel-panel {
+  background: rgba(20, 12, 28, 0.88);
+  border: 4px solid #d4a574;
+  box-shadow:
+    inset 0 0 0 2px #1a0a1e,
+    0 0 20px rgba(255, 183, 197, 0.25);
+  padding: 2rem;
+  font-family: "VT323", monospace;
+  color: #fff5e6;
+}
+
+.pixel-btn {
+  font-family: "VT323", monospace;
+  font-size: 1.25rem;
+  padding: 0.6rem 1.4rem;
+  background: #3d2040;
+  color: #ffe4b5;
+  border: 3px solid #d4a574;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  image-rendering: pixelated;
+}
+
+.pixel-btn:hover:not(:disabled) {
+  background: #5a3060;
+  color: #ffb7c5;
+  box-shadow: 0 0 12px rgba(255, 183, 197, 0.5);
+}
+
+.pixel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pixel-btn-glow {
+  border-color: #ffb7c5;
+  box-shadow: 0 0 8px rgba(255, 183, 197, 0.4);
+}
+
+/* Landing */
+.landing {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.landing-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 520px;
+}
+
+.landing-eyebrow {
+  font-size: 1.1rem;
+  color: #ffb7c5;
+  margin-bottom: 0.5rem;
+}
+
+.landing-title {
+  font-family: "VT323", monospace;
+  font-size: 2.8rem;
+  color: #ffe4b5;
+  margin: 0 0 0.5rem;
+  text-shadow: 2px 2px 0 #4a2040;
+}
+
+.landing-subtitle {
+  font-size: 1.3rem;
+  color: #d4a574;
+  margin-bottom: 2rem;
+}
+
+/* Memory Rain */
+.memory-rain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.memory-rain-item {
+  position: absolute;
+  top: -120px;
+  width: 80px;
+  padding: 6px 6px 20px;
+  background: #fffef5;
+  border: 2px solid #d4a574;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+  animation: memory-fall linear forwards;
+  opacity: 0.55;
+  transform: rotate(-3deg);
+}
+
+.memory-rain-item img {
+  width: 100%;
+  height: 60px;
+  object-fit: cover;
+  display: block;
+  image-rendering: pixelated;
+  filter: sepia(0.15);
+}
+
+.memory-rain-caption {
+  display: block;
+  font-family: "VT323", monospace;
+  font-size: 0.7rem;
+  color: #4a3728;
+  text-align: center;
+  margin-top: 4px;
+}
+
+@keyframes memory-fall {
+  0% {
+    transform: translateY(0) rotate(-3deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.55;
+  }
+  100% {
+    transform: translateY(110vh) rotate(5deg);
+    opacity: 0.2;
+  }
+}
+
+/* Login */
+.memory-login,
+.intro-story {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.login-panel,
+.intro-panel {
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+}
+
+.login-progress {
+  color: #d4a574;
+  font-size: 1.1rem;
+}
+
+.login-question {
+  font-size: 1.8rem;
+  color: #ffe4b5;
+  margin: 1rem 0 1.5rem;
+}
+
+.login-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.login-option {
+  width: 100%;
+  text-align: left;
+}
+
+.login-feedback {
+  font-size: 1.2rem;
+  color: #ffb7c5;
+  margin: 1rem 0;
+  min-height: 1.5rem;
+}
+
+.login-feedback.sparkle {
+  animation: sparkle-pulse 0.6s ease;
+}
+
+@keyframes sparkle-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+    text-shadow: 0 0 10px #ffb7c5;
+  }
+}
+
+/* Intro */
+.intro-title {
+  font-size: 2rem;
+  color: #ffb7c5;
+  margin-bottom: 1rem;
+}
+
+.intro-lines {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.intro-line {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #fff5e6;
+  margin: 0.3rem 0;
+}
+
+/* Game */
+.game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.game-container {
+  width: min(960px, 100vw);
+  height: min(540px, 56vw);
+  border: 4px solid #d4a574;
+  box-shadow: 0 0 24px rgba(255, 183, 197, 0.3);
+}
+
+.game-container canvas {
+  image-rendering: pixelated;
+}
+
+.controls-hint {
+  font-family: "VT323", monospace;
+  font-size: 0.95rem;
+  color: #d4a574;
+  margin: 0;
+}
+
+/* Dialogue */
+.dialogue-box {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem;
+  pointer-events: none;
+}
+
+.dialogue-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  pointer-events: auto;
+}
+
+.dialogue-speaker {
+  font-size: 1rem;
+  color: #ffb7c5;
+  margin: 0 0 0.5rem;
+}
+
+.dialogue-text {
+  font-size: 1.4rem;
+  line-height: 1.5;
+  margin: 0 0 1rem;
+  min-height: 3rem;
+}
+
+.dialogue-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dialogue-hint {
+  font-size: 0.9rem;
+  color: #d4a574;
+}
+
+.dialogue-next {
+  font-size: 1rem;
+}
+
+/* Letter Modal */
+.letter-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 5, 20, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1rem;
+}
+
+.letter-modal {
+  max-width: 560px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: linear-gradient(180deg, #fff8e7 0%, #f5e6c8 100%);
+  color: #3d2314;
+  border-color: #8b6914;
+}
+
+.letter-title {
+  font-family: "VT323", monospace;
+  font-size: 2rem;
+  color: #5a3060;
+  text-align: center;
+  margin: 0 0 1rem;
+}
+
+.letter-paragraph {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin: 0.6rem 0;
+  animation: fade-in 0.5s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.letter-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.letter-modal .pixel-btn {
+  background: #5a3060;
+  color: #ffe4b5;
+}
+
+/* Audio toggle */
+.audio-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 50;
+  padding: 0.4rem 0.8rem;
+  font-size: 1.2rem;
+}

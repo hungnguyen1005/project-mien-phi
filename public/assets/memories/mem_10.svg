@@ -1,0 +1,5 @@
+﻿<svg xmlns='http://www.w3.org/2000/svg' width='120' height='90' viewBox='0 0 120 90'>
+  <rect width='120' height='90' fill='#5a3060'/>
+  <rect x='8' y='8' width='104' height='60' fill='#fffef5' opacity='0.5'/>
+  <text x='60' y='78' text-anchor='middle' font-family='monospace' font-size='10' fill='#3d2314'>10/07 (placeholder)</text>
+</svg>
