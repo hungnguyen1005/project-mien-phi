@@ -1,5 +1,3 @@
-const audioPath = (fileName) => `/assets/audio/${encodeURIComponent(fileName)}`;
-
 export const memoryLevels = [
   {
     id: "atra",
@@ -8,9 +6,7 @@ export const memoryLevels = [
     theme: "Ấn tượng đầu tiên",
     music: {
       title: "Vạn sự Như ý",
-      src: audioPath(
-        "Vạn Sự Như Ý Lyrics - Trúc Nhân #vsny #lyrics #trucnhan #nhactethay - Double Music Box (128k).mp3"
-      ),
+      src: "/assets/audio/scene-1-van-su-nhu-y.mp3",
     },
     bgColors: { sky: 0x2d1f3d, ground: 0x4a3728, accent: 0xd4a574 },
     dialogueKey: "atra_intro",
@@ -46,9 +42,7 @@ export const memoryLevels = [
     theme: "Lần đầu cảm xúc sâu sắc",
     music: {
       title: "Chiều nay không có mưa bay",
-      src: audioPath(
-        "Chiều Nay Không Có Mưa Bay - Bùi Công Nam live at Mây Sài Gòn _ Official Music Video.mp3"
-      ),
+      src: "/assets/audio/scene-2-chieu-nay-khong-co-mua-bay.mp3",
     },
     bgColors: { sky: 0x6b4c7a, ground: 0x3d5a3d, accent: 0xffb7c5 },
     dialogueKey: "dalat_intro",
@@ -68,9 +62,7 @@ export const memoryLevels = [
     theme: "Một checkpoint nhẹ nhàng",
     music: {
       title: "Orchestra version",
-      src: audioPath(
-        "Lân Nhã, Quốc Thiên, TC Như Quỳnh, Lâm Bảo Ngọc, Hà An Huy, Bích Trâm _ Orchestra Version.mp3"
-      ),
+      src: "/assets/audio/scene-3-orchestra-version.mp3",
     },
     bgColors: { sky: 0x1a0a2e, ground: 0x2d1b3d, accent: 0xc41e3a },
     dialogueKey: "cgv_intro",
@@ -95,7 +87,7 @@ export const memoryLevels = [
     theme: "Vui, hài, routine của hai người",
     music: {
       title: "Sáng mắt chưa",
-      src: audioPath("Sáng mắt chưa trúc nhân lyric video - Trần Quang Vĩnh (128k).mp3"),
+      src: "/assets/audio/scene-4-sang-mat-chua.mp3",
     },
     bgColors: { sky: 0x0d0221, ground: 0x1a0533, accent: 0xff00ff },
     dialogueKey: "karaoke_intro",
@@ -118,9 +110,7 @@ export const finalPathConfig = {
   theme: "Con đường cuối đến chỗ em Tấn",
   music: {
     title: "Những ngày trời bao la",
-    src: audioPath(
-      "Những Ngày Trời Bao La - Gia đình Haha Lyrics - KHANG DUY ENTERTAIMENT OFFICIAL (128k).mp3"
-    ),
+    src: "/assets/audio/scene-5-nhung-ngay-troi-bao-la.mp3",
   },
   bgColors: { sky: 0xff7e5f, ground: 0x3d2b1f, accent: 0xffd89b },
   dialogueKey: "final_path",
