@@ -1,11 +1,10 @@
 import { useMemo, useState } from "react";
-import { getAugmentById } from "../data/augments";
 import { getQuestionById, isCorrectAnswer } from "../data/questions";
 import { getStageByNumberAndDifficulty } from "../data/stages";
 import {
   applyAugmentReward,
   applyStageClearRecovery,
-  getAugmentReward,
+  getAugmentChoices,
 } from "../game/roguelike/augmentSystem";
 import { createBossCombat, performBossTurn } from "../game/roguelike/bossSystem";
 import {
@@ -51,6 +50,7 @@ const enterStage = (state, stageNumber, difficulty, playerOverride = state.playe
     bossCombat: null,
     pendingQuestion: null,
     pendingAugment: null,
+    pendingAugmentChoices: [],
     pendingUpgradeChoices: [],
     questionResult: null,
     stageClearedBeforeUpgrade: false,
@@ -69,6 +69,7 @@ const enterBoss = (state, playerOverride = state.player) => {
     bossCombat: createBossCombat(player),
     pendingQuestion: null,
     pendingAugment: null,
+    pendingAugmentChoices: [],
     questionResult: null,
     notice: "Final boss đang chờ artifact được kích hoạt.",
   };
@@ -155,7 +156,11 @@ export const useRoguelikeGame = () => {
         return {
           ...nextState,
           flow: FLOW.UPGRADE,
-          pendingUpgradeChoices: getUpgradeChoices(result.player),
+          pendingUpgradeChoices: getUpgradeChoices(
+            result.player,
+            3,
+            current.currentStage.stageNumber,
+          ),
           stageClearedBeforeUpgrade: result.stageCleared,
         };
       }
@@ -168,9 +173,11 @@ export const useRoguelikeGame = () => {
     });
   };
 
-  const chooseUpgrade = (itemId) => {
+  const chooseUpgrade = (itemId, replacedArtifactId = null) => {
     setState((current) => {
-      const upgradedPlayer = consumePendingUpgrade(applyItemChoice(current.player, itemId));
+      const upgradedPlayer = consumePendingUpgrade(
+        applyItemChoice(current.player, itemId, replacedArtifactId),
+      );
       const nextState = {
         ...current,
         player: upgradedPlayer,
@@ -180,7 +187,11 @@ export const useRoguelikeGame = () => {
       if (upgradedPlayer.pendingUpgradeLevels > 0) {
         return {
           ...nextState,
-          pendingUpgradeChoices: getUpgradeChoices(upgradedPlayer),
+          pendingUpgradeChoices: getUpgradeChoices(
+            upgradedPlayer,
+            3,
+            current.currentStage.stageNumber,
+          ),
         };
       }
 
@@ -203,12 +214,13 @@ export const useRoguelikeGame = () => {
     setState((current) => {
       const correct = isCorrectAnswer(current.pendingQuestion, answer);
       const nextDifficulty = correct ? "easy" : "hard";
-      const pendingAugment = getAugmentReward(current.currentStage, current.player);
+      const pendingAugmentChoices = getAugmentChoices(current.currentStage, current.player);
 
       return {
         ...current,
         flow: FLOW.AUGMENT_REWARD,
-        pendingAugment,
+        pendingAugment: null,
+        pendingAugmentChoices,
         nextStageNumber: current.currentStage.stageNumber + 1,
         nextDifficulty,
         questionResult: {
@@ -230,10 +242,9 @@ export const useRoguelikeGame = () => {
     });
   };
 
-  const claimAugmentAndContinue = () => {
+  const claimAugmentAndContinue = (augmentId) => {
     setState((current) => {
-      const augment = getAugmentById(current.pendingAugment.id);
-      const withAugment = applyAugmentReward(current.player, augment.id);
+      const withAugment = applyAugmentReward(current.player, augmentId);
       const recoveredPlayer = applyStageClearRecovery(withAugment);
 
       if (current.currentStage.stageNumber >= 5) {
@@ -241,6 +252,7 @@ export const useRoguelikeGame = () => {
           {
             ...current,
             pendingAugment: null,
+            pendingAugmentChoices: [],
           },
           recoveredPlayer,
         );
@@ -250,6 +262,7 @@ export const useRoguelikeGame = () => {
         {
           ...current,
           pendingAugment: null,
+          pendingAugmentChoices: [],
         },
         current.nextStageNumber,
         current.nextDifficulty,

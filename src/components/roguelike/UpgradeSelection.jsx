@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const typeLabels = {
   weapon: "Weapon",
   armor: "Armor",
@@ -5,6 +7,17 @@ const typeLabels = {
 };
 
 export default function UpgradeSelection({ choices, onChoose }) {
+  const [replacementChoice, setReplacementChoice] = useState(null);
+
+  const handleChoose = (choice) => {
+    if (choice.needsReplacement) {
+      setReplacementChoice(choice);
+      return;
+    }
+
+    onChoose(choice.id);
+  };
+
   return (
     <section className="flow-screen upgrade-screen">
       <div className="screen-heading">
@@ -17,17 +30,45 @@ export default function UpgradeSelection({ choices, onChoose }) {
           <button
             key={choice.id}
             type="button"
-            className={`upgrade-card ${choice.type}`}
-            onClick={() => onChoose(choice.id)}
+            className={`upgrade-card ${choice.type} rarity-${choice.rarity}`}
+            onClick={() => handleChoose(choice)}
           >
-            <span className="upgrade-type">{typeLabels[choice.type]}</span>
+            <span className="upgrade-type">
+              {typeLabels[choice.type]} · {choice.rarityLabel}
+            </span>
             <strong>{choice.name}</strong>
             <small>{choice.choiceLabel}</small>
-            <p>{choice.description}</p>
+            <p>{choice.stats}</p>
             <em>{choice.passive ?? choice.activeEffect}</em>
+            <small>{choice.playstyle ?? choice.build}</small>
           </button>
         ))}
       </div>
+
+      {replacementChoice && (
+        <div className="pixel-panel replacement-panel">
+          <p className="eyebrow">Artifact slot đầy</p>
+          <h2>Thay artifact nào bằng {replacementChoice.name}?</h2>
+          <div className="replacement-grid">
+            {replacementChoice.replacementOptions.map((artifact) => (
+              <button
+                key={artifact.id}
+                type="button"
+                className={`upgrade-card artifact rarity-${artifact.rarity}`}
+                onClick={() => onChoose(replacementChoice.id, artifact.id)}
+              >
+                <span className="upgrade-type">Đang trang bị</span>
+                <strong>{artifact.name}</strong>
+                <p>{artifact.stats}</p>
+                <em>{artifact.passive}</em>
+              </button>
+            ))}
+          </div>
+          <button type="button" className="pixel-btn compact" onClick={() => setReplacementChoice(null)}>
+            Quay lại
+          </button>
+        </div>
+      )}
     </section>
   );
 }

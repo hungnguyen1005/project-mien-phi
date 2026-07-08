@@ -28,6 +28,7 @@ export const createInitialGameState = () => ({
   bossCombat: null,
   pendingQuestion: null,
   pendingAugment: null,
+  pendingAugmentChoices: [],
   pendingUpgradeChoices: [],
   nextStageNumber: 1,
   nextDifficulty: "easy",

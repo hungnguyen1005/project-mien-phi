@@ -26,6 +26,11 @@ export const createPlayerState = (characterId) => {
     lives: 3,
     items: [],
     augments: [],
+    runGrowth: {
+      damageBonusPercent: 0,
+      maxHpPercentBonus: 0,
+    },
+    guardianAegisUsed: false,
     pendingUpgradeLevels: 0,
     isDefeated: false,
   };
@@ -35,13 +40,15 @@ export const getEffectTotals = (player) => {
   const totals = {};
 
   player.items.forEach((item) => {
-    addEffect(totals, item.effect, item.level);
+    addEffect(totals, item.effect);
   });
 
   player.augments.forEach((augment) => {
     const augmentData = getAugmentById(augment.id) ?? augment;
     addEffect(totals, augmentData.effect, augment.stacks ?? 1);
   });
+
+  addEffect(totals, player.runGrowth);
 
   return totals;
 };
@@ -50,8 +57,12 @@ export const getPlayerStats = (player) => {
   const base = player.character.baseStats;
   const effects = getEffectTotals(player);
 
-  const maxHp = Math.round(base.maxHp + (effects.maxHpBonus ?? 0));
-  const maxMana = Math.round(base.maxMana + (effects.maxManaBonus ?? 0));
+  const maxHp = Math.round(
+    (base.maxHp + (effects.maxHpBonus ?? 0)) * (1 + (effects.maxHpPercentBonus ?? 0)),
+  );
+  const maxMana = Math.round(
+    (base.maxMana + (effects.maxManaBonus ?? 0)) * (1 + (effects.maxManaPercentBonus ?? 0)),
+  );
   const attack = Math.round(base.attack + (effects.attackBonus ?? 0));
   const defense = Math.round(base.defense + (effects.defenseBonus ?? 0));
 
@@ -62,7 +73,8 @@ export const getPlayerStats = (player) => {
     defense,
     manaRegen: base.manaRegen + (effects.manaRegenBonus ?? 0),
     critChance: clamp(base.critChance + (effects.critChanceBonus ?? 0), 0, 0.75),
-    critDamage: 1.55 + (player.character.passive?.critDamageBonus ?? 0),
+    critDamage:
+      1.55 + (player.character.passive?.critDamageBonus ?? 0) + (effects.critDamageBonus ?? 0),
     damageReduction: clamp(effects.damageReductionBonus ?? 0, 0, 0.65),
     damageBonusPercent: effects.damageBonusPercent ?? 0,
     attackSpeedBonus: effects.attackSpeedBonus ?? 0,
@@ -71,7 +83,8 @@ export const getPlayerStats = (player) => {
     expGainBonus: effects.expGainBonus ?? 0,
     itemDropBonus: effects.itemDropBonus ?? 0,
     stageClearHealPercent: effects.stageClearHealPercent ?? 0,
-    stageManaBonus: player.character.passive?.stageManaBonus ?? 0,
+    healingReceivedBonus: effects.healingReceivedBonus ?? 0,
+    stageManaBonus: (player.character.passive?.stageManaBonus ?? 0) + (effects.stageManaBonus ?? 0),
   };
 };
 
@@ -87,10 +100,11 @@ export const clampPlayerVitals = (player) => {
 
 export const healPlayer = (player, amount) => {
   const stats = getPlayerStats(player);
+  const healingMultiplier = Math.max(0, 1 + stats.healingReceivedBonus);
 
   return {
     ...player,
-    hp: clamp(Math.round(player.hp + amount), 0, stats.maxHp),
+    hp: clamp(Math.round(player.hp + amount * healingMultiplier), 0, stats.maxHp),
   };
 };
 
@@ -119,6 +133,23 @@ export const damagePlayer = (player, damage) => {
       },
       lostLife: false,
       defeated: false,
+    };
+  }
+
+  const hasDestinyAegis = player.items.some((item) => item.id === "destiny_aegis");
+
+  if (hasDestinyAegis && !player.guardianAegisUsed) {
+    const stats = getPlayerStats(player);
+
+    return {
+      player: {
+        ...player,
+        hp: clamp(Math.round(stats.maxHp * 0.35), 1, stats.maxHp),
+        guardianAegisUsed: true,
+      },
+      lostLife: false,
+      defeated: false,
+      guardianSaved: true,
     };
   }
 
@@ -154,7 +185,10 @@ export const damagePlayer = (player, damage) => {
 };
 
 export const preparePlayerForStage = (player) => {
-  const clamped = clampPlayerVitals(player);
+  const clamped = clampPlayerVitals({
+    ...player,
+    guardianAegisUsed: false,
+  });
   const stats = getPlayerStats(clamped);
 
   return restoreMana(clamped, stats.stageManaBonus);
@@ -174,8 +208,7 @@ export const restorePlayerForRetry = (player) => {
 
 export const calculatePlayerPowerLevel = (player) => {
   const itemPowerBonus = player.items.reduce((total, item) => {
-    const typeWeight = item.type === "artifact" ? 4 : 5;
-    return total + item.level * typeWeight;
+    return total + (item.powerBonus ?? 0);
   }, 0);
 
   const augmentPowerBonus = player.augments.reduce((total, augment) => {

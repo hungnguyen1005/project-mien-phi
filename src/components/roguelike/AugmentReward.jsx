@@ -1,30 +1,36 @@
 export default function AugmentReward({
-  augment,
+  choices,
   questionResult,
   nextDifficulty,
   isFinalStage,
-  onContinue,
+  onChoose,
 }) {
   return (
     <section className="flow-screen augment-screen">
-      <div className="pixel-panel reward-panel">
+      <div className="pixel-panel reward-panel wide">
         <p className="eyebrow">{questionResult.correct ? "Đúng rồi" : "Sai mất rồi"}</p>
         <h1>{questionResult.correct ? "Map sau dễ hơn" : "Map sau khó hơn"}</h1>
         <p className="reward-copy">
           {isFinalStage
-            ? "Stage cuối đã xong. Sau augment này là final boss."
+            ? "Stage cuối đã xong. Chọn augment cuối trước khi vào final boss."
             : `Đường tiếp theo sẽ là ${nextDifficulty === "easy" ? "easy map" : "hard map"}.`}
         </p>
 
-        <div className="augment-card">
-          <span>Augment nhận được</span>
-          <strong>{augment.name}</strong>
-          <p>{augment.description}</p>
+        <div className="augment-choice-grid">
+          {choices.map((augment) => (
+            <button
+              key={augment.id}
+              type="button"
+              className={`augment-card rarity-${augment.rarity}`}
+              onClick={() => onChoose(augment.id)}
+            >
+              <span>Augment · {augment.rarityLabel}</span>
+              <strong>{augment.name}</strong>
+              <p>{augment.effectText}</p>
+              <em>{augment.build}</em>
+            </button>
+          ))}
         </div>
-
-        <button type="button" className="pixel-btn pixel-btn-glow" onClick={onContinue}>
-          Nhận augment
-        </button>
       </div>
     </section>
   );

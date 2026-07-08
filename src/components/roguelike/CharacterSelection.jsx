@@ -4,8 +4,8 @@ export default function CharacterSelection({ selectedCharacterId, onSelect, onBe
   return (
     <section className="flow-screen character-screen">
       <div className="screen-heading">
-        <p className="eyebrow">Chọn nhân vật</p>
-        <h1>Anh muốn đi hành trình bằng form nào?</h1>
+        <p className="eyebrow">Chọn class</p>
+        <h1>Chọn lối chơi cho run này</h1>
       </div>
 
       <div className="character-grid">

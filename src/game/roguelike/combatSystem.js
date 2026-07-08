@@ -129,6 +129,10 @@ export const performStageTurn = (player, combat, action = COMBAT_ACTIONS.BASIC) 
 
     turnLog.push(`${monster.name} đánh lại ${monsterDamage} sát thương.`);
 
+    if (damageResult.guardianSaved) {
+      turnLog.push("Thiên Mệnh Hộ Giáp phát sáng và giữ anh lại trên chiến trường.");
+    }
+
     if (damageResult.lostLife && !damageResult.defeated) {
       turnLog.push(`Anh mất 1 mạng, còn ${nextPlayer.lives} mạng.`);
     }

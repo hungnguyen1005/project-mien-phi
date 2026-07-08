@@ -69,11 +69,11 @@ export default function BirthdayRoguelike() {
   if (state.flow === FLOW.AUGMENT_REWARD) {
     return (
       <AugmentReward
-        augment={state.pendingAugment}
+        choices={state.pendingAugmentChoices}
         questionResult={state.questionResult}
         nextDifficulty={state.nextDifficulty}
         isFinalStage={state.currentStage.stageNumber >= 5}
-        onContinue={actions.claimAugmentAndContinue}
+        onChoose={actions.claimAugmentAndContinue}
       />
     );
   }

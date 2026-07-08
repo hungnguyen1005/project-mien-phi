@@ -1,6 +1,8 @@
-import { SPECIAL_ARTIFACT_ID } from "../../data/items";
+import { SPECIAL_ARTIFACT_ID, itemTypes } from "../../data/items";
 import { getExpToNextLevel } from "../../game/roguelike/levelSystem";
 import StatBar from "./StatBar";
+
+const EmptySlot = ({ label }) => <li className="empty-slot">{label}: trống</li>;
 
 export default function PlayerHud({
   player,
@@ -10,6 +12,9 @@ export default function PlayerHud({
   onActivateArtifact,
 }) {
   const expToNextLevel = getExpToNextLevel(player.level);
+  const weapon = player.items.find((item) => item.type === itemTypes.WEAPON);
+  const armor = player.items.find((item) => item.type === itemTypes.ARMOR);
+  const artifacts = player.items.filter((item) => item.type === itemTypes.ARTIFACT);
 
   return (
     <aside className="player-hud">
@@ -18,7 +23,7 @@ export default function PlayerHud({
           {player.character.image}
         </div>
         <div>
-          <p className="hud-kicker">Nguyễn Huy Hoàng</p>
+          <p className="hud-kicker">Class</p>
           <h2>{player.character.name}</h2>
           <p>{player.character.passive.name}</p>
         </div>
@@ -36,13 +41,29 @@ export default function PlayerHud({
 
       <div className="hud-section">
         <h3>Trang bị</h3>
-        {player.items.length === 0 ? (
-          <p className="muted">Chưa có món nào.</p>
+        <ul className="chip-list slot-list">
+          {weapon ? (
+            <li className={`rarity-${weapon.rarity}`}>Vũ khí: {weapon.name}</li>
+          ) : (
+            <EmptySlot label="Vũ khí" />
+          )}
+          {armor ? (
+            <li className={`rarity-${armor.rarity}`}>Giáp: {armor.name}</li>
+          ) : (
+            <EmptySlot label="Giáp" />
+          )}
+        </ul>
+      </div>
+
+      <div className="hud-section">
+        <h3>Artifact {artifacts.length}/3</h3>
+        {artifacts.length === 0 ? (
+          <p className="muted">Chưa có artifact.</p>
         ) : (
           <ul className="chip-list">
-            {player.items.map((item) => (
-              <li key={item.id} className={item.isActivated ? "active" : ""}>
-                {item.name} Lv.{item.level}
+            {artifacts.map((artifact) => (
+              <li key={artifact.id} className={`rarity-${artifact.rarity}`}>
+                {artifact.name}
               </li>
             ))}
           </ul>
@@ -56,9 +77,8 @@ export default function PlayerHud({
         ) : (
           <ul className="chip-list">
             {player.augments.map((augment) => (
-              <li key={augment.id}>
+              <li key={augment.id} className={`rarity-${augment.rarity}`}>
                 {augment.name}
-                {augment.stacks > 1 ? ` x${augment.stacks}` : ""}
               </li>
             ))}
           </ul>
@@ -66,7 +86,7 @@ export default function PlayerHud({
       </div>
 
       <div className="hud-section artifact-status">
-        <h3>Artifact đặc biệt</h3>
+        <h3>Tinh Hạch Vĩnh Cửu</h3>
         {!specialArtifact.isOwned && <p className="muted">Chưa sở hữu.</p>}
         {specialArtifact.isOwned && (
           <>

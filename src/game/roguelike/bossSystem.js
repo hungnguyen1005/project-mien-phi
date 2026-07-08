@@ -117,6 +117,10 @@ export const performBossTurn = (player, boss, action = COMBAT_ACTIONS.BASIC) => 
   nextPlayer = damageResult.player;
   turnLog.push(`Boss phản công ${bossDamage} sát thương.`);
 
+  if (damageResult.guardianSaved) {
+    turnLog.push("Thiên Mệnh Hộ Giáp phát sáng và chặn lần gục ngã này.");
+  }
+
   if (damageResult.lostLife && !damageResult.defeated) {
     turnLog.push(`Anh mất 1 mạng, còn ${nextPlayer.lives} mạng.`);
   }
